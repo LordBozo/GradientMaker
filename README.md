@@ -1,2 +1,3 @@
 # GradientMaker
-This is a program i have been working on since 2016 in my free time, right now im on version 3.2
+This is a program i have been working on since 2016 in my free time, right now im on version 4.0.7
+Shoutout to ThePhisics101 for help on the GUI version 
