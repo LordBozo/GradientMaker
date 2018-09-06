@@ -27,7 +27,7 @@ class DrawClass(object):
         global cursor
         global startLength
         cursor = Turtle()
-        startLength = screensize()[1]
+        startLength = 100
         cursor.width(12)
         cursor.hideturtle()
 
@@ -272,26 +272,37 @@ def color_buttons(_x):
         cButtonList[0].grid_remove()
         cButtonList.remove(cButtonList[0])
     for y in range(_x):
-        cButtonList += [Button(panel, text="Color " + str(y), command=functools.partial(color_button, y))]
+        rgb=colorMatrix[y]
+        if rgb==[0,0,0]:
+            rgb=[255,255,255]
+        tempRGB=f'#{rgb[0]:02x}{rgb[1]:02x}{rgb[2]:02x}'
+        cButtonList += [Button(panel, text="Color " + str(y+1),bg=tempRGB, command=functools.partial(color_button, y))]
         cButtonList[y].grid(row=12, column=y + 2)
 
 def color_button(color_num):
     global colorMatrix
     temp = askcolor()
-    colorMatrix[color_num] = [int(temp[0][0]), int(temp[0][1]), int(temp[0][2])]
+    cButtonList[color_num].config(bg=temp[1])
+    print(temp[1])
+    temp=temp[0]
+    colorMatrix[color_num] = [int(temp[0]), int(temp[1]), int(temp[2])]
 def clear_button():
     cursor.reset()
     cursor.width(12)
     cursor.shape("classic")
     cursor.hideturtle()
     print(cursor.shape())
-    
+def size(x):
+    global startLength
+    startLength=int(x)
 cButtonList = [Button(panel, text="OK", command=color_button)]
 bu = Button(panel, text="Draw", command=draw, height=4, width=8)
-bu.grid(row=1, column=2,rowspan=3,columnspan=3)
+bu.grid(row=1, column=3,rowspan=3,columnspan=3)
 bu = Button(panel, text="Erase", command=clear_button)
-bu.grid(row=5, column=2)
+bu.grid(row=5, column=3)
 w = Scale(panel, from_=1, to=30, length=300, label="Color Amount", command=color_buttons)
 w.grid(row=0, column=1, rowspan=10)
+w = Scale(panel, from_=100, to=int(1.5*screensize()[1]), length=300, label="Size", command=size)
+w.grid(row=0, column=2, rowspan=10)
 
 mainloop()
