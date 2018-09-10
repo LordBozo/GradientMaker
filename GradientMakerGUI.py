@@ -17,39 +17,37 @@ for x in range(150):
 
 def btn_click():
     get_shape()
-hideturtle()
-tracer(1000)
 class DrawClass(object):
     def __init__(self):  
-        global cursor, startLength
+        global cursor, startLength,screen
+        startLength = 100
         cursor = RawTurtle(cv)
         screen=cursor.getscreen()
         screen.colormode(255)
         screen.tracer(1000)
-        up()
-        begin_poly()
-        forward(1)
+        cursor.up()
+        cursor.begin_poly()
+        cursor.forward(1)
         for l in range(4):
-            circle(1,270,200)
-            left(180)
-        end_poly()
-        register_shape("Quatre",get_poly())
-        goto(0,0)
-        up()
-        setheading(90)
-        begin_poly()
-        backward(.707)
-        right(30)
-        forward(1)
-        left(30)
-        circle(.25,180,200)
-        left(180)
-        circle(.25,180,200)
-        left(30)
-        forward(1)
-        end_poly()
-        register_shape("Heart",get_poly())
-        startLength = 100
+            cursor.circle(1,270,200)
+            cursor.left(180)
+        cursor.end_poly()
+        screen.register_shape("Quatre",cursor.get_poly())
+        cursor.goto(0,0)
+        cursor.up()
+        cursor.setheading(90)
+        cursor.begin_poly()
+        cursor.backward(.707)
+        cursor.right(30)
+        cursor.forward(1)
+        cursor.left(30)
+        cursor.circle(.25,180,200)
+        cursor.left(180)
+        cursor.circle(.25,180,200)
+        cursor.left(30)
+        cursor.forward(1)
+        cursor.end_poly()
+        screen.register_shape("Heart",cursor.get_poly())
         cursor.width(12)
         cursor.hideturtle()
 
@@ -65,8 +63,7 @@ class DrawClass(object):
         cursor.goto(x, y)
         cursor.down()
 
-    def Circle(self, radius,
-               degree):  ## Custom Circle function cuz Turtle's default one is really slow and poorly optimized for smaller sizes
+    def Circle(self, radius, degree):  ## Custom Circle function cuz Turtle's default one is really slow and poorly optimized for smaller sizes
         cursor.down()
         mult = radius / abs(radius)
         for x in range(int(degree / 2)):
@@ -91,7 +88,7 @@ class DrawClass(object):
                 cursor.down()
                 cursor.forward(.5*(startLength - (startLength / Fade) * x - i))
                 cursor.right(105)
-        update()
+        screen.update()
          
 
     def circle1(self, Fade, Colors):
@@ -105,7 +102,7 @@ class DrawClass(object):
                 self.Circle(startLength, 180)
                 self.Circle(-startLength, 180)
                 cursor.right(360 / startLength)
-        update()
+        screen.update()
          
 
     def circle2(self, Fade, Colors):
@@ -117,20 +114,20 @@ class DrawClass(object):
                 self.change(C1, C2, i, Fade)
                 cursor.dot(2*(startLength - (startLength / Fade) * x - i))
                 cursor.forward(1 / (10 * startLength))
-        update()
+        screen.update()
          
 
     def polygon(self, Fade, Colors):
         Point=-1
         while Point==-1:
-            Point = askinteger("Polygon", "How many sides do you want",initialvalue=-1)
+            Point = askinteger("Polygon", "How many sides do you want",initialvalue=3)
         cursor.up()
         cursor.goto(math.cos(0), math.sin(0))
         cursor.begin_poly()
         for p in range(Point):
             cursor.goto(math.cos(math.radians(360 / Point) * p), math.sin(math.radians(360 / Point) * p))
         cursor.end_poly()
-        register_shape("Polygon", cursor.get_poly())
+        screen.register_shape("Polygon", cursor.get_poly())
         cursor.down()
         cursor.shape("Polygon")
         cursor.setheading(90)
@@ -141,7 +138,7 @@ class DrawClass(object):
                 self.change(C1, C2, i, Fade)
                 cursor.shapesize(startLength - (startLength / Fade) * x - i)
                 cursor.stamp()
-        update()
+        screen.update()
          
 
     def polygonswirl(self, Fade, Colors):
@@ -158,7 +155,7 @@ class DrawClass(object):
         for p in range(Point):
             cursor.goto(math.cos(math.radians(360 / Point) * p), math.sin(math.radians(360 / Point) * p))
         cursor.end_poly()
-        register_shape("Polygon", cursor.get_poly())
+        screen.register_shape("Polygon", cursor.get_poly())
         cursor.down()
         cursor.shape("Polygon")
         cursor.setheading(90)
@@ -170,11 +167,11 @@ class DrawClass(object):
                 cursor.shapesize(startLength - (startLength / Fade) * x - i)
                 cursor.stamp()
                 cursor.right(Rotate)
-        update()
+        screen.update()
         
 
     def cone(self, Fade, Colors):
-        width(1)
+        cursor.width(1)
         cursor.setheading(0)
         self.move(0, 0)
         for x in range(Fade):
@@ -184,39 +181,40 @@ class DrawClass(object):
                 self.change(C1, C2, i, Fade)
                 cursor.dot(startLength - (startLength / Fade) * x - i)
                 cursor.forward(1)
-        update()
+        screen.update()
          
 
     def doublecone(self, Fade, Colors):
         cursor.setheading(0)
         cursor.width(1)
-        self.move(-startLength, 0)
+        sL=startLength/1.75
+        self.move(-startLength*.5, 0)
         for x in range(Fade):
             C1 = Colors[x]
             C2 = Colors[x + 1]
-            for i in range(int(startLength / Fade)):
+            for i in range(int(sL / Fade)):
                 self.change(C1, C2, i, Fade)
-                cursor.dot(startLength - (startLength / Fade)*x - i)
+                cursor.dot(sL - (sL / Fade)*x - i)
                 cursor.forward(1)
         cursor.forward(2)
         cursor.width(5)
         for x in range(Fade):
             C2 = Colors[len(Colors) - x - 1]
             C1 = Colors[len(Colors) - x - 2]
-            for i in range(int(startLength / Fade)):
-                cursor.width(width() + .55)
+            for i in range(int(sL / Fade)):
+                cursor.width(cursor.width() + 2/sL)
                 self.change(C2, C1, i, Fade)
                 cursor.up()
                 cursor.forward(.5)
                 cursor.right(90)
-                self.Circle((startLength / Fade) * x + i + 1, 360)
+                self.Circle((sL / Fade) * x + i + 1, 360)
                 cursor.left(90)
-        update()
+        screen.update()
          
 
     def yinyang(self, Fade, Colors):
         self.move(0, 0)
-        cursor.pensize(5)
+        cursor.pensize(8)
         for x in range(Fade):
             C1 = Colors[x]
             C2 = Colors[x + 1]
@@ -228,7 +226,7 @@ class DrawClass(object):
                 self.Circle(startLength, 180)
                 self.Circle(-startLength, 180)
                 cursor.right(182)
-        update()
+        screen.update()
          
 
     def heart(self, Fade, Colors):
@@ -242,7 +240,7 @@ class DrawClass(object):
                 self.change(C1, C2, i, Fade)
                 cursor.shapesize((startLength - (startLength / Fade) * x - i))
                 cursor.stamp()
-        update()
+        screen.update()
 
     def quatre(self, Fade, Colors):
         self.move(0, 0)
@@ -255,7 +253,7 @@ class DrawClass(object):
                 self.change(C1, C2, i, Fade)
                 cursor.shapesize((startLength - (startLength / Fade) * x - i) / 3)
                 cursor.stamp()
-        update()
+        screen.update()
 
 Draw = DrawClass()
 
@@ -271,8 +269,7 @@ RADIOS = [("flower", Draw.flower, 1),
           ("quatrefoil", Draw.quatre, 10)]
 
 for name, func, ind in RADIOS:
-    Radiobutton(panel, text=name, variable=selectionShape, value=ind, indicatoron=0, command=btn_click)\
-        .grid(row=ind, column=1)
+    Radiobutton(panel, text=name, variable=selectionShape, value=ind, indicatoron=0, command=btn_click).grid(row=ind, column=1)
 
 def get_shape():
     global selectionShape
@@ -323,7 +320,7 @@ bu = Button(panel, text="Erase", command=clear_button)
 bu.grid(row=5, column=3)
 w = Scale(panel, from_=1, to=30, length=300, label="Color Amount", command=color_buttons)
 w.grid(row=11, column=1, rowspan=10)
-w = Scale(panel, from_=100, to=int(1.5*screensize()[1]), length=300, label="Size", command=size)
+w = Scale(panel, from_=100, to=450, length=300, label="Size", command=size)
 w.grid(row=11, column=2, rowspan=10)
 
-mainloop()
+panel.mainloop()
