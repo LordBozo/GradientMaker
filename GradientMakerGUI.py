@@ -7,7 +7,7 @@ from tkinter.simpledialog import *
 import functools
 import math
 panel = Tk()
-cv=Canvas(panel,width=900,height=900)
+cv=Canvas(panel,width=panel.winfo_screenheight()-100,height=panel.winfo_screenheight()-100)
 cv.grid(row=0,column=0,rowspan=30)
 selectionShape = IntVar()
 colorMatrix = []
@@ -51,11 +51,11 @@ class DrawClass(object):
         cursor.width(12)
         cursor.hideturtle()
 
-    def change(self, C1, C2, i, Fade):  ##This calculates the difference between the colors that its going between, and finds out how much it needs to change each time
-        distance = startLength / Fade
-        red = int(C1[0] + ((C2[0] - C1[0]) / distance) * i)
-        green = int(C1[1] + ((C2[1] - C1[1]) / distance) * i)
-        blue = int(C1[2] + ((C2[2] - C1[2]) / distance) * i)
+    def change(self, C1, C2, percent):  ##This calculates the difference between the colors that its going between, and finds out how much it needs to change each time
+        red = int(C1[0] + ((C2[0] - C1[0]) / 100) * percent)
+        green = int(C1[1] + ((C2[1] - C1[1]) / 100) * percent)
+        blue = int(C1[2] + ((C2[2] - C1[2]) / 100) * percent)
+        #print(percent,C1,C2)
         cursor.color((red, green, blue))
 
     def move(self, x, y):  ##moves the turtle somewhere without leaving a line
@@ -83,7 +83,7 @@ class DrawClass(object):
             C1 = Colors[x]
             C2 = Colors[x + 1]
             for i in range(int(startLength / Fade)):
-                self.change(C1, C2, i, Fade)
+                self.change(C1, C2, 100*i*Fade/startLength)
                 cursor.forward(.5*(startLength - (startLength / Fade) * x - i))
                 cursor.down()
                 cursor.forward(.5*(startLength - (startLength / Fade) * x - i))
@@ -93,15 +93,15 @@ class DrawClass(object):
 
     def circle1(self, Fade, Colors):
         self.move(0, 0)
-        cursor.pensize(4)
+        cursor.width(5)
         for x in range(Fade):
             C1 = Colors[x]
             C2 = Colors[x + 1]
-            for i in range(int(startLength / Fade)):
-                self.change(C1, C2, i, Fade)
+            for i in range(int(180 / Fade)):
+                self.change(C1, C2, i/(1.80/Fade) )
                 self.Circle(startLength, 180)
                 self.Circle(-startLength, 180)
-                cursor.right(360 / startLength)
+                cursor.right(2)
         screen.update()
          
 
@@ -111,7 +111,7 @@ class DrawClass(object):
             C1 = Colors[x]
             C2 = Colors[x + 1]
             for i in range(int(startLength / Fade)):
-                self.change(C1, C2, i, Fade)
+                self.change(C1, C2, 100*i*Fade/startLength)
                 cursor.dot(2*(startLength - (startLength / Fade) * x - i))
                 cursor.forward(1 / (10 * startLength))
         screen.update()
@@ -135,7 +135,7 @@ class DrawClass(object):
             C1 = Colors[x]
             C2 = Colors[x + 1]
             for i in range(int(startLength / Fade)):
-                self.change(C1, C2, i, Fade)
+                self.change(C1, C2, 100*i*Fade/startLength)
                 cursor.shapesize(startLength - (startLength / Fade) * x - i)
                 cursor.stamp()
         screen.update()
@@ -163,7 +163,7 @@ class DrawClass(object):
             C1 = Colors[x]
             C2 = Colors[x + 1]
             for i in range(int(startLength / Fade)):
-                self.change(C1, C2, i, Fade)
+                self.change(C1, C2, 100*i*Fade/startLength)
                 cursor.shapesize(startLength - (startLength / Fade) * x - i)
                 cursor.stamp()
                 cursor.right(Rotate)
@@ -178,32 +178,32 @@ class DrawClass(object):
             C1 = Colors[x]
             C2 = Colors[x + 1]
             for i in range(int(startLength / Fade)):
-                self.change(C1, C2, i, Fade)
+                self.change(C1, C2, 100*i*Fade/startLength)
                 cursor.dot(startLength - (startLength / Fade) * x - i)
                 cursor.forward(1)
         screen.update()
          
 
     def doublecone(self, Fade, Colors):
-        cursor.setheading(0)
-        cursor.width(1)
         sL=startLength/1.75
-        self.move(-startLength*.5, 0)
+        cursor.width(1)
+        cursor.setheading(0)
+        self.move(-startLength/1.75, 0)
         for x in range(Fade):
             C1 = Colors[x]
             C2 = Colors[x + 1]
-            for i in range(int(sL / Fade)):
-                self.change(C1, C2, i, Fade)
-                cursor.dot(sL - (sL / Fade)*x - i)
-                cursor.forward(1)
+            for i in range(int(startLength / Fade)):
+                self.change(C1, C2, 100*i*Fade/startLength)
+                cursor.dot((startLength - (startLength / Fade) * x - i)/1.75)
+                cursor.forward(.5)
         cursor.forward(2)
-        cursor.width(5)
+        cursor.width(1)
         for x in range(Fade):
             C2 = Colors[len(Colors) - x - 1]
             C1 = Colors[len(Colors) - x - 2]
             for i in range(int(sL / Fade)):
                 cursor.width(cursor.width() + 2/sL)
-                self.change(C2, C1, i, Fade)
+                self.change(C2, C1, 100*i*Fade/sL)
                 cursor.up()
                 cursor.forward(.5)
                 cursor.right(90)
@@ -219,7 +219,7 @@ class DrawClass(object):
             C1 = Colors[x]
             C2 = Colors[x + 1]
             for i in range(int(90/Fade)):
-                self.change(C1, C2, i, Fade)
+                self.change(C1, C2, i/(.90/Fade))
                 self.Circle(startLength, 180)
                 self.Circle(-startLength, 180)
                 cursor.right(180)
@@ -230,15 +230,15 @@ class DrawClass(object):
          
 
     def heart(self, Fade, Colors):
-        self.move(0, 0)
+        self.move(0, 100)
         cursor.setheading(90)
         cursor.shape("Heart")
         for x in range(Fade):
             C1 = Colors[x]
             C2 = Colors[x + 1]
             for i in range(int(startLength / Fade)):
-                self.change(C1, C2, i, Fade)
-                cursor.shapesize((startLength - (startLength / Fade) * x - i))
+                self.change(C1, C2, 100*i*Fade/startLength)
+                cursor.shapesize(1.5*(startLength - (startLength / Fade) * x - i))
                 cursor.stamp()
         screen.update()
 
@@ -250,8 +250,8 @@ class DrawClass(object):
             C1 = Colors[x]
             C2 = Colors[x + 1]
             for i in range(int(startLength / Fade)):
-                self.change(C1, C2, i, Fade)
-                cursor.shapesize((startLength - (startLength / Fade) * x - i) / 3)
+                self.change(C1, C2, 100*i*Fade/startLength)
+                cursor.shapesize(1.2*(startLength - (startLength / Fade) * x - i) / 3)
                 cursor.stamp()
         screen.update()
 
@@ -320,7 +320,7 @@ bu = Button(panel, text="Erase", command=clear_button)
 bu.grid(row=5, column=3)
 w = Scale(panel, from_=1, to=30, length=300, label="Color Amount", command=color_buttons)
 w.grid(row=11, column=1, rowspan=10)
-w = Scale(panel, from_=100, to=450, length=300, label="Size", command=size)
+w = Scale(panel, from_=100, to=(panel.winfo_screenheight()-100)/2, length=300, label="Size", command=size)
 w.grid(row=11, column=2, rowspan=10)
 
-panel.mainloop()
+mainloop()
